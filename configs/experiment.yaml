@@ -1,0 +1,22 @@
+# Default experiment grid.
+#   python experiments/run_benchmark.py --config configs/experiment.yaml
+
+suite: data/scenarios/public_smoke.jsonl
+
+models:
+  - gpt-5.6-terra
+  - llama3.1:8b
+
+defenses:
+  - none
+  - type_checker
+  - capability_router
+  - llm_judge
+
+# Judge model for the llm_judge layer. Set this to a model OTHER than the agent
+# under test: a judge sharing the agent's weights shares its priors, and the
+# "defense" ends up credited for refusals the agent would have made anyway.
+judge_model: gpt-5.6-terra
+
+timeout_s: 120
+results_root: results/runs

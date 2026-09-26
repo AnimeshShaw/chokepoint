@@ -1,0 +1,77 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: Test (Python ${{ matrix.python-version }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.10", "3.11", "3.12"]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+
+      - name: Install package
+        run: pip install -e ".[analysis,dev]"
+
+      # No network, no API keys: the suite runs entirely against the fixture
+      # bundled at tests/fixtures/. Nothing here should ever call an LLM
+      # provider or the Hugging Face Hub.
+      - name: Run tests
+        run: pytest -v
+
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install ruff
+        run: pip install ruff>=0.5
+
+      - name: Ruff check
+        run: ruff check src/ tests/ experiments/ analysis/ scripts/
+
+  validate-fixture:
+    name: Validate bundled fixture
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install package
+        run: pip install -e .
+
+      # Confirms the offline fixture itself stays schema-valid and every
+      # injection payload resolves — the same check the harness runs before
+      # any real evaluation.
+      - name: Validate tests/fixtures/public_smoke.jsonl
+        run: python -m chokepoint.cli validate --suite tests/fixtures/public_smoke.jsonl

@@ -1,0 +1,20 @@
+# Model registry. Mirrors chokepoint.agents.model_config.MODEL_REGISTRY.
+#
+# `tool_calling` records whether the model reliably emits valid tool frames.
+# Models marked `unreliable` cannot be scored for security at all: they fail the
+# benign task for capability reasons, which is a tool-use limitation and not a
+# defensive property. Reporting their false-rejection rate as a security result
+# conflates the two.
+
+frontier:
+  claude-opus-5:     {provider: anthropic, tool_calling: reliable}
+  claude-fable-5:    {provider: anthropic, tool_calling: reliable}
+  claude-sonnet-5:   {provider: anthropic, tool_calling: reliable}
+  gpt-5.6-sol:       {provider: openai,    tool_calling: reliable}
+  gpt-5.6-terra:     {provider: openai,    tool_calling: reliable}
+  gemini-3.7-flash:  {provider: google,    tool_calling: reliable}
+
+local:
+  llama3.1:8b:       {provider: ollama, tool_calling: reliable}
+  gemma4:12b:        {provider: ollama, tool_calling: unreliable}
+  qwen2.5-coder:7b:  {provider: ollama, tool_calling: unreliable}

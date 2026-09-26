@@ -1,0 +1,99 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# Chokepoint — .gitignore
+#
+# DATA MODEL
+# ----------
+# Code lives here (GitHub). Benchmark suites and evaluation traces live on the
+# Hugging Face Hub: https://huggingface.co/datasets/AnimeshShaw/chokepoint-bench
+# so the two version independently and the data carries its own citation.
+#
+# `data/` and `results/` below are local working directories the scripts write
+# to (dataset construction, evaluation runs) — never tracked in this repo.
+# A tiny fixture needed for offline tests/CI is bundled separately at
+# tests/fixtures/ and IS tracked.
+# ─────────────────────────────────────────────────────────────────────────────
+
+# ── Credentials — never commit ────────────────────────────────────────────────
+.env
+.env.*
+!.env.example
+*.key
+*.pem
+credentials.json
+secrets.yaml
+
+# ── Data & results — published on the Hugging Face Hub, not in this repo ─────
+/data/
+/results/
+
+# ── LaTeX build artifacts (paper/ keeps only the .tex source and .pdf) ───────
+paper/**/*.aux
+paper/**/*.log
+paper/**/*.out
+paper/**/*.synctex.gz
+paper/**/*.zip
+paper/**/*.bbl
+paper/**/*.blg
+
+# ── Python ───────────────────────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib60/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+*.egg
+MANIFEST
+
+# ── Virtual environments ─────────────────────────────────────────────────────
+.venv/
+venv/
+ENV/
+env/
+.conda/
+
+# ── Testing / coverage ───────────────────────────────────────────────────────
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+.tox/
+.nox/
+.hypothesis/
+
+# ── Type checkers / linters ──────────────────────────────────────────────────
+.mypy_cache/
+.dmypy.json
+.ruff_cache/
+.pyre/
+
+# ── Notebooks ────────────────────────────────────────────────────────────────
+.ipynb_checkpoints/
+
+# ── Editors / OS ─────────────────────────────────────────────────────────────
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ── Local scratch ────────────────────────────────────────────────────────────
+scratch/
+tmp/
+*.log
+
+# ── Pre-audit code, kept locally for reference only ──────────────────────────
+.archive/

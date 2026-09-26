@@ -1,0 +1,71 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "chokepoint"
+version = "0.2.0"
+description = "A benchmark for runtime tool-call mediation defenses against indirect prompt injection in LLM agents"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [{ name = "Animesh Shaw", email = "animesh15b@iimk.edu.in" }]
+keywords = [
+    "llm-agents",
+    "prompt-injection",
+    "ai-security",
+    "benchmark",
+    "tool-calling",
+]
+classifiers = [
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Security",
+]
+
+dependencies = [
+    "langchain>=0.2.0",
+    "langgraph>=0.2.0",
+    "langchain-core>=0.2.0",
+    "langchain-openai",
+    "langchain-anthropic",
+    "langchain-google-genai",
+    "langchain-ollama",
+    "pydantic>=2.0",
+    "python-dotenv",
+    "pyyaml",
+    "tqdm",
+    "huggingface_hub>=0.24",
+]
+
+[project.optional-dependencies]
+analysis = ["numpy>=1.24", "scipy>=1.11", "pandas>=2.0"]
+dev = ["pytest>=8.0", "pytest-cov", "ruff>=0.5", "black>=24.0"]
+
+[project.scripts]
+chokepoint = "chokepoint.cli:main"
+
+[project.urls]
+Repository = "https://github.com/AnimeshShaw/chokepoint"
+Dataset = "https://huggingface.co/datasets/AnimeshShaw/chokepoint-bench"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]
+ignore = ["E501"]  # line length is black's job, not a correctness signal
+
+[tool.black]
+line-length = 100

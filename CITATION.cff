@@ -1,0 +1,22 @@
+cff-version: 1.2.0
+title: "Chokepoint: A Validated Harness for Evaluating Tool-Call Mediation Defenses Against Indirect Prompt Injection"
+message: >-
+  Please do not cite empirical results from this repository until the
+  benchmark re-run is complete and the pre-print is public. Results
+  produced before 2026-08-23 are withdrawn; see docs/harness_defects.md.
+type: software
+authors:
+  - given-names: Animesh
+    family-names: Shaw
+    email: animesh15b@iimk.edu.in
+    affiliation: Independent Researcher
+version: 0.2.0
+date-released: "2026-08-23"
+license: MIT
+keywords:
+  - llm-agents
+  - prompt-injection
+  - ai-security
+  - benchmark
+  - tool-calling
+  - evaluation-validity
