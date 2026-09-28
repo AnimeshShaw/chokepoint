@@ -8,11 +8,36 @@ indirect prompt injection in LLM agents.**
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![CI](https://github.com/AnimeshShaw/chokepoint/actions/workflows/ci.yml/badge.svg)](https://github.com/AnimeshShaw/chokepoint/actions/workflows/ci.yml)
 
-An LLM agent cannot reliably tell instructions from data. When it reads an email,
-a file, or a database row that an adversary wrote, text in that data can hijack
-what the agent does next. The one place a defense can be enforced regardless of
-what the model was persuaded to believe is the **chokepoint**: the boundary
-between a proposed tool call and its execution.
+> **Status.** The accompanying paper is currently under review / awaiting
+> publication. This repository holds the harness, the reproduction tooling, and
+> pointers to the published dataset — everything needed to run the benchmark
+> independently. The paper text and the docs that narrate its specific findings
+> are not included here until publication; see [§ Status and scope](#status-and-scope).
+
+---
+
+## Table of contents
+
+- [What this is](#what-this-is)
+- [Status and scope](#status-and-scope)
+- [Dataset](#dataset)
+- [Quickstart](#quickstart)
+- [Scenario schema](#scenario-schema)
+- [Metrics](#metrics)
+- [Repository layout](#repository-layout)
+- [Documentation](#documentation)
+- [Citation](#citation)
+- [License](#license)
+
+---
+
+## What this is
+
+An LLM agent cannot reliably tell instructions from data. When it reads an
+email, a file, or a database row that an adversary wrote, text in that data can
+hijack what the agent does next. The one place a defense can be enforced
+regardless of what the model was persuaded to believe is the **chokepoint**:
+the boundary between a proposed tool call and its execution.
 
 Chokepoint implements three mediation paradigms at that boundary and measures
 what each costs and what each buys.
@@ -25,29 +50,45 @@ what each costs and what each buys.
 
 Layers compose (`llm_judge+type_checker`, `all`).
 
----
-
-## Why this exists
-
-A prior version of this harness (ToolShield-Bench) reported plausible, citable
-numbers that turned out to be wrong. An audit found four defect classes — silent
-payload non-delivery, attack success scored by tool identity rather than
-arguments, a false-rejection rate conflated with model incapacity, and no audit
-trail — each of which produces a believable but incorrect result. See
-[`docs/harness_defects.md`](docs/harness_defects.md).
-
-Re-scored on identical traces: a reported **21.7%** attack-success rate is truly
-**1.2%**; a model previously reported at **62.8%** registers **0%** under the
-corrected harness. This repository is the instrument that makes those defects
-unrepresentable, not just the fix for one benchmark run. Details, methodology,
-and the full result set are in the paper (see [`CITATION.cff`](CITATION.cff)).
+The harness itself is the contribution as much as any single number it
+produces: a prior version of this evaluation reported plausible, citable
+results that later audit found to rest on silent payload non-delivery, attack
+success scored by tool identity rather than arguments, a false-rejection rate
+conflated with model incapacity, and no audit trail. This repository is built
+so that each of those failure modes is structurally unrepresentable — see
+[`docs/threat_model.md`](docs/threat_model.md) for the formal setup and
+[§ Status and scope](#status-and-scope) for what that means for what's public
+here today.
 
 ---
 
-## Data
+## Status and scope
 
-The benchmark suites and evaluation traces are **not** in this repository — they
-are published on the Hugging Face Hub, so the code and the data version
+This repository is public **before** the paper is. That is a deliberate,
+narrow choice, not an oversight:
+
+**Public now — everything needed to run and audit the harness independently:**
+the full source, the test suite, CI, the reproduction guide, the threat model,
+and the AI-usage disclosure. Anyone can install this repository, pull the
+published dataset, and reproduce a result from scratch today.
+
+**Held until publication:** the paper itself and the two docs that narrate its
+specific quantitative findings and literature positioning. These add
+interpretation and headline numbers on top of what the code already lets you
+compute yourself; releasing them before the paper is out would pre-empt the
+paper rather than support reproducing it. Once the paper is accepted or posted,
+this section will be updated with the arXiv link and those documents restored.
+
+If you run the harness yourself and get numbers, they are your own
+independently-produced results — that is exactly the point of publishing the
+code and data ahead of the writeup.
+
+---
+
+## Dataset
+
+The benchmark suites and evaluation traces are **not** in this repository —
+they are published on the Hugging Face Hub, so the code and the data version
 independently:
 
 **[🤗 `AnimeshShaw/chokepoint-bench`](https://huggingface.co/datasets/AnimeshShaw/chokepoint-bench)**
@@ -98,11 +139,12 @@ python experiments/run_benchmark.py --suite core \
 python analysis/statistics.py --results-root results/runs
 ```
 
-Full instructions: [`docs/reproducing.md`](docs/reproducing.md).
+Full instructions, including the dedicated ablation and adaptive-attack
+experiments: [`docs/reproducing.md`](docs/reproducing.md).
 
 ---
 
-## What a scenario looks like
+## Scenario schema
 
 Each scenario carries its own complete environment and states the attacker's
 objective as a checkable predicate over tool calls, not as a list of tool names.
@@ -136,13 +178,13 @@ objective as a checkable predicate over tool calls, not as a list of tool names.
 }
 ```
 
-Two properties matter, and both were absent from the predecessor:
+Two properties matter here:
 
 - **The locator is machine-resolvable.** If the payload cannot be placed, the
   suite fails validation. It can never silently go undelivered.
 - **Attack success is argument-level.** `execute_sql_query` is often both the
   tool the user legitimately needs and the tool the attacker wants. Scoring by
-  name marks correct behaviour as compromise.
+  name alone marks correct behaviour as compromise.
 
 ---
 
@@ -158,31 +200,30 @@ Two properties matter, and both were absent from the predecessor:
 
 `UPR` is reported over attack scenarios too, so a defense that stops an attack
 by paralysing the agent is visibly distinct from one that stops it while the
-task still completes. This triple is a re-derivation of AgentDojo's
-Benign Utility / Utility under Attack / targeted ASR, and is attributed as such
-in [`docs/related_work.md`](docs/related_work.md).
+task still completes. This triple is a re-derivation of AgentDojo's Benign
+Utility / Utility under Attack / targeted ASR, attributed as such in the paper.
 
 ---
 
-## Layout
+## Repository layout
 
 ```
 src/chokepoint/     agents, defenses, tools, environment, dataset, eval, analysis
-experiments/        benchmark sweep, adaptive sweep, overhead measurement
-analysis/           CLI wrappers for statistics, taxonomy, ablation
+experiments/        benchmark sweep, adaptive sweep, ablation, overhead measurement
+analysis/           CLI wrappers for statistics, taxonomy, ablation, judge calibration
 scripts/            dataset-construction tooling (writes to a local, gitignored
                     data/ — the canonical published copy is on Hugging Face)
 configs/            model and defense configuration
 tests/              regression tests, one module per audit defect
   └─ fixtures/      the offline test suite bundled with the repo
-paper/              paper source (.tex) and PDF
-docs/               threat model, audit record, literature review, repro guide
+docs/               threat model, reproduction guide, AI-usage disclosure
+.github/workflows/  CI: offline tests (3.10-3.12), lint, fixture validation
 ```
 
 Every run writes a manifest (model, defense, suite SHA-256, git commit,
-versions) to a local, gitignored `results/`, with integer counts alongside every
-rate and one trace per scenario recording each tool call, its arguments, each
-defense decision, and the per-condition attack evaluation.
+versions) to a local, gitignored `results/`, with integer counts alongside
+every rate and one trace per scenario recording each tool call, its arguments,
+each defense decision, and the per-condition attack evaluation.
 
 ---
 
@@ -191,9 +232,7 @@ defense decision, and the per-condition attack evaluation.
 | Document | Contents |
 |---|---|
 | [`docs/threat_model.md`](docs/threat_model.md) | Adversary capabilities, assumptions, what is out of scope |
-| [`docs/harness_defects.md`](docs/harness_defects.md) | The audit: four ways this benchmark silently produced invalid numbers |
-| [`docs/related_work.md`](docs/related_work.md) | Literature review and an honest novelty assessment |
-| [`docs/reproducing.md`](docs/reproducing.md) | Setup, running, extending |
+| [`docs/reproducing.md`](docs/reproducing.md) | Setup, running, extending, adding scenarios and defenses |
 | [`docs/AI_USAGE.md`](docs/AI_USAGE.md) | How AI assistance was used in this project |
 | [`SECURITY.md`](SECURITY.md) | Responsible disclosure and scope |
 
@@ -201,7 +240,9 @@ defense decision, and the per-condition attack evaluation.
 
 ## Citation
 
-See [`CITATION.cff`](CITATION.cff).
+See [`CITATION.cff`](CITATION.cff). The arXiv identifier will be added once the
+paper is posted; please do not cite empirical results from this repository
+before then.
 
 ## License
 

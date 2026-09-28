@@ -96,10 +96,10 @@ suite changes its digest and correctly invalidates the cache.
 python experiments/run_adaptive.py --suite adaptive
 ```
 
-Read [`related_work.md` §4](related_work.md) first. The current adaptive
-scenarios are one-shot generations, not attacks optimized against a live
-defense, and results from them are a weak lower bound on evasion — not evidence
-of mitigation.
+The `adaptive` scenarios above are one-shot generations, not attacks optimized
+against a live defense, and results from them are a weak lower bound on evasion
+— not evidence of mitigation. For a real robustness claim use the iterative
+attacker in §6 below, which optimizes against the live defended agent.
 
 ### Overhead
 
@@ -270,9 +270,9 @@ distinguishable from one the agent never attempted.
 
 Register the name in `DefenseType` and wire it into
 `DefendedAgent._apply_defenses`. Log collection deliberately does not catch
-exceptions — an interface mismatch must fail loudly, since silently swallowing
-one is how type-checker logs stayed empty across an entire evaluation (see
-[`harness_defects.md`](harness_defects.md)).
+exceptions — an interface mismatch must fail loudly. Silently swallowing one is
+exactly how a prior version of this harness ended up with empty type-checker
+logs across an entire evaluation without anyone noticing.
 
 ---
 

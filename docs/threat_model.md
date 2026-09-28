@@ -35,12 +35,14 @@ an attack the user immediately notices is a weaker attack.
   for a defense claim; a defense evaluated only against attacks written before
   it existed has not been evaluated.
 
-> **Current limitation.** Chokepoint's adaptive suite is generated one-shot from
-> a description of the defenses, not iteratively optimized against a live
-> defense. It is therefore a weak lower bound on evasion. Published work
-> (Zhan et al., NAACL Findings 2025) breaks all eight defenses it tests with
-> genuinely adaptive attacks at >50% ASR. See
-> [`related_work.md` §4](related_work.md).
+> **On adaptive rigor.** A one-shot payload generated from a description of the
+> defenses is a weak lower bound on evasion, not a robustness claim — published
+> work (Zhan et al., NAACL Findings 2025) breaks all eight defenses it tests
+> with genuinely adaptive attacks at >50% ASR. Chokepoint's iterative attacker
+> (`experiments/run_adaptive_iterative.py`) instead optimizes the payload
+> against the live defended agent round over round and reports the resulting
+> ASR-by-round curve, which is the standard this threat model expects a
+> robustness claim to meet.
 
 ## 3. Defender
 

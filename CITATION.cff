@@ -2,8 +2,8 @@ cff-version: 1.2.0
 title: "Chokepoint: A Validated Harness for Evaluating Tool-Call Mediation Defenses Against Indirect Prompt Injection"
 message: >-
   Please do not cite empirical results from this repository until the
-  benchmark re-run is complete and the pre-print is public. Results
-  produced before 2026-08-23 are withdrawn; see docs/harness_defects.md.
+  accompanying paper is published. Results produced before 2026-08-23 are
+  withdrawn — see the paper for the corrected findings and audit methodology.
 type: software
 authors:
   - given-names: Animesh

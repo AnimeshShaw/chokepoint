@@ -26,14 +26,16 @@ secrets.yaml
 /data/
 /results/
 
-# ── LaTeX build artifacts (paper/ keeps only the .tex source and .pdf) ───────
-paper/**/*.aux
-paper/**/*.log
-paper/**/*.out
-paper/**/*.synctex.gz
-paper/**/*.zip
-paper/**/*.bbl
-paper/**/*.blg
+# ── Embargoed until publication ───────────────────────────────────────────────
+# The paper itself, and the two docs that narrate its specific findings
+# (the audit's quantified numbers, and the literature positioning/novelty
+# assessment). Kept locally; not part of the public repository until the paper
+# is accepted/published, at which point these can be un-ignored. Everything
+# needed to run and reproduce the harness independent of those findings
+# (threat model, reproduction guide, AI-usage disclosure) stays public.
+/paper/
+docs/harness_defects.md
+docs/related_work.md
 
 # ── Python ───────────────────────────────────────────────────────────────────
 __pycache__/
