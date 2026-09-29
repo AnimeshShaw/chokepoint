@@ -42,7 +42,8 @@ an attack the user immediately notices is a weaker attack.
 > (`experiments/run_adaptive_iterative.py`) instead optimizes the payload
 > against the live defended agent round over round and reports the resulting
 > ASR-by-round curve, which is the standard this threat model expects a
-> robustness claim to meet.
+> robustness claim to meet. See [`related_work.md` §4](related_work.md) for the
+> wider literature this sits against.
 
 ## 3. Defender
 

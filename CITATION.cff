@@ -1,9 +1,9 @@
 cff-version: 1.2.0
 title: "Chokepoint: A Validated Harness for Evaluating Tool-Call Mediation Defenses Against Indirect Prompt Injection"
 message: >-
-  Please do not cite empirical results from this repository until the
-  accompanying paper is published. Results produced before 2026-08-23 are
-  withdrawn — see the paper for the corrected findings and audit methodology.
+  If you use this software, please cite the preferred-citation entry below.
+  Results produced before 2026-08-23 are withdrawn; see the paper for the
+  corrected findings and audit methodology.
 type: software
 authors:
   - given-names: Animesh
@@ -13,6 +13,8 @@ authors:
 version: 0.2.0
 date-released: "2026-08-23"
 license: MIT
+repository-code: "https://github.com/AnimeshShaw/chokepoint"
+url: "https://huggingface.co/datasets/AnimeshShaw/chokepoint-bench"
 keywords:
   - llm-agents
   - prompt-injection
@@ -20,3 +22,18 @@ keywords:
   - benchmark
   - tool-calling
   - evaluation-validity
+preferred-citation:
+  type: article
+  title: "Silent Failures in Agentic Security Evaluation: A Validated Harness for Tool-Call Mediation Under Indirect Prompt Injection"
+  authors:
+    - given-names: Animesh
+      family-names: Shaw
+      email: animesh15b@iimk.edu.in
+      affiliation: Independent Researcher
+  year: 2026
+  month: 9
+  identifiers:
+    - type: other
+      value: "arXiv:2609.32691"
+      description: "arXiv preprint identifier"
+  url: "https://arxiv.org/abs/2609.32691"

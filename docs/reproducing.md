@@ -272,7 +272,8 @@ Register the name in `DefenseType` and wire it into
 `DefendedAgent._apply_defenses`. Log collection deliberately does not catch
 exceptions — an interface mismatch must fail loudly. Silently swallowing one is
 exactly how a prior version of this harness ended up with empty type-checker
-logs across an entire evaluation without anyone noticing.
+logs across an entire evaluation without anyone noticing (see
+[`harness_defects.md`](harness_defects.md)).
 
 ---
 

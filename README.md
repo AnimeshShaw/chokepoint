@@ -3,23 +3,21 @@
 **A validated harness for evaluating tool-call mediation defenses against
 indirect prompt injection in LLM agents.**
 
-[![Paper](https://img.shields.io/badge/arXiv-pending-b31b1b.svg)](CITATION.cff)
+[![Paper](https://img.shields.io/badge/arXiv-2609.32691-b31b1b.svg)](https://arxiv.org/abs/2609.32691)
 [![Dataset](https://img.shields.io/badge/🤗%20Dataset-chokepoint--bench-yellow)](https://huggingface.co/datasets/AnimeshShaw/chokepoint-bench)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![CI](https://github.com/AnimeshShaw/chokepoint/actions/workflows/ci.yml/badge.svg)](https://github.com/AnimeshShaw/chokepoint/actions/workflows/ci.yml)
 
-> **Status.** The accompanying paper is currently under review / awaiting
-> publication. This repository holds the harness, the reproduction tooling, and
-> pointers to the published dataset — everything needed to run the benchmark
-> independently. The paper text and the docs that narrate its specific findings
-> are not included here until publication; see [§ Status and scope](#status-and-scope).
+> **Paper.** *Silent Failures in Agentic Security Evaluation: A Validated
+> Harness for Tool-Call Mediation Under Indirect Prompt Injection.*
+> [arXiv:2609.32691](https://arxiv.org/abs/2609.32691). The source is at
+> [`paper/chokepoint.tex`](paper/chokepoint.tex).
 
 ---
 
 ## Table of contents
 
 - [What this is](#what-this-is)
-- [Status and scope](#status-and-scope)
 - [Dataset](#dataset)
 - [Quickstart](#quickstart)
 - [Scenario schema](#scenario-schema)
@@ -51,37 +49,16 @@ what each costs and what each buys.
 Layers compose (`llm_judge+type_checker`, `all`).
 
 The harness itself is the contribution as much as any single number it
-produces: a prior version of this evaluation reported plausible, citable
-results that later audit found to rest on silent payload non-delivery, attack
+produces. A prior version of this evaluation reported plausible, citable
+results that an audit found to rest on silent payload non-delivery, attack
 success scored by tool identity rather than arguments, a false-rejection rate
-conflated with model incapacity, and no audit trail. This repository is built
-so that each of those failure modes is structurally unrepresentable — see
-[`docs/threat_model.md`](docs/threat_model.md) for the formal setup and
-[§ Status and scope](#status-and-scope) for what that means for what's public
-here today.
-
----
-
-## Status and scope
-
-This repository is public **before** the paper is. That is a deliberate,
-narrow choice, not an oversight:
-
-**Public now — everything needed to run and audit the harness independently:**
-the full source, the test suite, CI, the reproduction guide, the threat model,
-and the AI-usage disclosure. Anyone can install this repository, pull the
-published dataset, and reproduce a result from scratch today.
-
-**Held until publication:** the paper itself and the two docs that narrate its
-specific quantitative findings and literature positioning. These add
-interpretation and headline numbers on top of what the code already lets you
-compute yourself; releasing them before the paper is out would pre-empt the
-paper rather than support reproducing it. Once the paper is accepted or posted,
-this section will be updated with the arXiv link and those documents restored.
-
-If you run the harness yourself and get numbers, they are your own
-independently-produced results — that is exactly the point of publishing the
-code and data ahead of the writeup.
+conflated with model incapacity, and no audit trail. Re-scored on identical
+traces, a reported 21.7% attack-success rate turned out to be 1.2%, and a model
+previously reported at 62.8% registered 0% under the corrected harness. This
+repository is built so that each of those failure modes is structurally
+unrepresentable going forward — see [`docs/threat_model.md`](docs/threat_model.md)
+for the formal setup and [`docs/harness_defects.md`](docs/harness_defects.md)
+for the audit itself.
 
 ---
 
@@ -201,7 +178,9 @@ Two properties matter here:
 `UPR` is reported over attack scenarios too, so a defense that stops an attack
 by paralysing the agent is visibly distinct from one that stops it while the
 task still completes. This triple is a re-derivation of AgentDojo's Benign
-Utility / Utility under Attack / targeted ASR, attributed as such in the paper.
+Utility / Utility under Attack / targeted ASR, attributed as such in the
+[paper](https://arxiv.org/abs/2609.32691) and in
+[`docs/related_work.md`](docs/related_work.md).
 
 ---
 
@@ -216,7 +195,9 @@ scripts/            dataset-construction tooling (writes to a local, gitignored
 configs/            model and defense configuration
 tests/              regression tests, one module per audit defect
   └─ fixtures/      the offline test suite bundled with the repo
-docs/               threat model, reproduction guide, AI-usage disclosure
+paper/              paper source (.tex) and PDF
+docs/               threat model, audit record, literature review, repro guide,
+                    AI-usage disclosure
 .github/workflows/  CI: offline tests (3.10-3.12), lint, fixture validation
 ```
 
@@ -232,6 +213,8 @@ each defense decision, and the per-condition attack evaluation.
 | Document | Contents |
 |---|---|
 | [`docs/threat_model.md`](docs/threat_model.md) | Adversary capabilities, assumptions, what is out of scope |
+| [`docs/harness_defects.md`](docs/harness_defects.md) | The audit: four ways this benchmark silently produced invalid numbers |
+| [`docs/related_work.md`](docs/related_work.md) | Literature review and an honest novelty assessment |
 | [`docs/reproducing.md`](docs/reproducing.md) | Setup, running, extending, adding scenarios and defenses |
 | [`docs/AI_USAGE.md`](docs/AI_USAGE.md) | How AI assistance was used in this project |
 | [`SECURITY.md`](SECURITY.md) | Responsible disclosure and scope |
@@ -240,9 +223,19 @@ each defense decision, and the per-condition attack evaluation.
 
 ## Citation
 
-See [`CITATION.cff`](CITATION.cff). The arXiv identifier will be added once the
-paper is posted; please do not cite empirical results from this repository
-before then.
+```bibtex
+@misc{shaw2026chokepoint,
+  title  = {Silent Failures in Agentic Security Evaluation: A Validated Harness
+            for Tool-Call Mediation Under Indirect Prompt Injection},
+  author = {Animesh Shaw},
+  year   = {2026},
+  eprint = {2609.32691},
+  archivePrefix = {arXiv},
+  primaryClass  = {cs.CR}
+}
+```
+
+See also [`CITATION.cff`](CITATION.cff).
 
 ## License
 
